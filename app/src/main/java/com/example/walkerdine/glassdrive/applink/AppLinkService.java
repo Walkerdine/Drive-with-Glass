@@ -456,7 +456,7 @@ public class AppLinkService extends Service implements IProxyListenerALM {
 	public void onOnVehicleData(OnVehicleData notification) {
 		// TODO Auto-generated method stub
 
-		Drive.getInstance().updateSpeed(notification.getSpeed());
+		//Drive.getInstance().updateSpeed(notification.getSpeed());
 	}
 	
 	@Override

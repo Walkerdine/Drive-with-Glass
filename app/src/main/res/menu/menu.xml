@@ -3,7 +3,4 @@
     <item
         android:id="@+id/show_speed"
         android:title="Show Speed" />
-    <item
-        android:id="@+id/pause_menu_item"
-        android:title="@string/stop_music" />
 </menu>

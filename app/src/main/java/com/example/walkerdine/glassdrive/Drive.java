@@ -11,20 +11,25 @@ import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 import com.example.walkerdine.glassdrive.applink.AppLinkService;
+import java.util.Random;
 
 import com.ford.syncV4.proxy.SyncProxyALM;
 
 //import com.android.glass.touchpad.GestureDetector;
 
 import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.bluetooth.BluetoothAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +72,9 @@ public class Drive extends Activity {
         return currentUIActivity;
     }
 
+    Random rn = new Random();
+    int answer = 0;
+
 
     /**
      * {@link CardScrollView} to use as the main content view.
@@ -78,9 +86,12 @@ public class Drive extends Activity {
      */
     private View mView;
 
+    private String prefix = "Drive with Glass";
+
     private TextView textView;
     @Override
     protected void onCreate(Bundle bundle) {
+
         super.onCreate(bundle);
 
 
@@ -91,19 +102,40 @@ public class Drive extends Activity {
         setContentView(R.layout.layout);
 
         textView = ((TextView)findViewById(R.id.timestamp));
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (answer == 0) {
+                    textView.setText(prefix);
+                } else {
+                    textView.setText(answer + prefix);
+                    answer = rn.nextInt(5) + 50;
+                }
+            }
+        };
+
+        this.registerReceiver(receiver, new IntentFilter("com.alarms.updateAnswer"));
+
+        PendingIntent pending = PendingIntent.getBroadcast(this, 0, new Intent("com.alarms.updateAnswer"), 0);
+
         AlarmManager alarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
+        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 2000, 2000, pending);
+/*
         final Handler handler = new Handler(Looper.getMainLooper());
 
                 Drive.getInstance().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        textView.setText("Drive with Glass");
+                        textView.setText("Drive with Glass" + counter);
                         //Log.i("Drive", "" + textView.getText());
+                        answer = rn.nextInt(5) + 50;
                         counter--;
                     }
                 });
-        startSyncProxyService();
+        //startSyncProxyService();
+       */
     }
     @Override
     protected void onResume() {
@@ -115,11 +147,14 @@ public class Drive extends Activity {
         super.onPause();
     }
 
-    public void updateSpeed(final Double speed) {
+
+
+    public void updateSpeed() {
+
         Drive.getInstance().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textView.setText("Speed: " + speed);
+                textView.setText("Speed: "+ answer);
             }
         });
     }
@@ -148,6 +183,11 @@ public class Drive extends Activity {
         if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS) {
             switch (item.getItemId()) {
                 case R.id.show_speed:
+
+
+                    prefix = " MPH";
+                    answer = rn.nextInt(5) + 50;
+                    /*
                     //Build Request and send to proxy object:
                     int corrId = autoIncCorrId++;
                     SubscribeVehicleData msg = new SubscribeVehicleData();
@@ -174,10 +214,8 @@ public class Drive extends Activity {
                     } catch (SyncException e) {
                         e.printStackTrace();
                     }
-                    // handle top-level dogs menu item
-                    break;
-                case R.id.pause_menu_item:
-                    // handle top-level cats menu item
+                    */
+
                     break;
             }
             return true;

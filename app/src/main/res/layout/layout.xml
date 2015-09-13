@@ -34,8 +34,8 @@
             android:layout_marginLeft="@dimen/glass_card_margin"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Hello World"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Drive With Glass"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             />
         <!-- Put your widgets inside this RelativeLayout. -->
 
