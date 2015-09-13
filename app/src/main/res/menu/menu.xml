@@ -3,4 +3,10 @@
     <item
         android:id="@+id/show_speed"
         android:title="Show Speed" />
+    <item
+        android:id="@+id/show_RPM"
+        android:title="Show RPM" />
+    <item
+        android:id="@+id/show_fuel_level"
+        android:title="Show Fuel Level" />
 </menu>

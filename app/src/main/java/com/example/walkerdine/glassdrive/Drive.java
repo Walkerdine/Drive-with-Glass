@@ -110,7 +110,17 @@ public class Drive extends Activity {
                     textView.setText(prefix);
                 } else {
                     textView.setText(answer + prefix);
-                    answer = rn.nextInt(5) + 50;
+                    if(prefix == " MPH") {
+                        answer = rn.nextInt(5) + 50;
+                    }
+                    else if(prefix == " RPM")
+                    {
+                        answer = rn.nextInt(200) + 2000;
+                    }
+                    else if(prefix == "%")
+                    {
+                        answer = 85;
+                    }
                 }
             }
         };
@@ -217,6 +227,15 @@ public class Drive extends Activity {
                     */
 
                     break;
+                case R.id.show_RPM:
+                    prefix = " RPM";
+                    answer = rn.nextInt(200) + 2000;
+                    break;
+                case R.id.show_fuel_level:
+                    answer = 85;
+                    prefix = "%";
+                    break;
+
             }
             return true;
         }
